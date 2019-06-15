@@ -1,0 +1,80 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.szw</groupId>
+  <artifactId>TestAvroRPC</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>TestAvroRPC</name>
+  <url>http://maven.apache.org</url>
+
+  <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <compiler-plugin.version>2.3.2</compiler-plugin.version>
+        <avro.version>1.7.5</avro.version>
+    </properties>
+  <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.10</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.6.4</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.avro</groupId>
+            <artifactId>avro</artifactId>
+            <version>1.7.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.avro</groupId>
+            <artifactId>avro-ipc</artifactId>
+            <version>1.7.5</version>
+        </dependency>
+    </dependencies>
+   <build>
+  <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${compiler-plugin.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.avro</groupId>
+                <artifactId>avro-maven-plugin</artifactId>
+                <version>1.7.5</version>
+                <executions>
+                <!-- Maven运行有很多的生命周期,比如clean test complie
+                                        称为阶段:phase.但是phase并不是Maven运行的最小单位 
+                                阶段还可以在细分为很多的goal,有些插件的goal如果Maven不识别就会报错
+                                但并不影响使用                        -->
+               <!-- 此处的配置表示:使用avro,需要通过avro插件来运行
+                                    此插件运行指定的阶段: generate-sources-->                 
+                <execution>
+                        <id>schemas</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>schema</goal>
+                            <goal>protocol</goal>
+                            <goal>idl-protocol</goal>
+                        </goals>
+                 <configuration>
+                 		<!-- 使用avro,必须要定义模式文件,模式文件必须放在指定的目录下 -->
+						<sourceDirectory>${project.basedir}/src/main/avro/</sourceDirectory>
+						<!-- 通过模式文件输出对应类文件,下面指定的是输出的源目录 -->
+						<outputDirectory>${project.basedir}/src/main/java/</outputDirectory>
+					</configuration>       
+                 </execution>   
+                    
+                </executions>
+            </plugin>
+        </plugins>
+  </build>
+</project>
